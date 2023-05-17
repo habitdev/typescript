@@ -26,21 +26,20 @@
 
 // 키와 값의 type을 정의한다
 class Department {
-  private name: string; 
+  // private id: string;
+  // private name: string;
   private employees: string[] = [];
-  // public: 기본값, 어느 곳에서든 접근할 수 있다
-  // private: 생성된 객체 내부에서만 접근할 수 있는 속성
 
-  constructor(name: string) {
-    this.name = name;
-    // 클래스에 입력할 수 있는 특별한 메서드
-    // 이 클래스와 연결되며 객체가 생성되면서 실행되는 클래스에 기반하여
-    // 만드는 모든 객체에도 연결되는 함수
-    // 이를 활용하여 구축하는 객체에 대한 초기화 작업을 수행할 수 있다
+  // name은 public이어야 하는데
+  // 이는 동일한 이름으로 속성을 만들고 싶다는 것을
+  // 타입스크립트에게 알리는 명시적인 명령이기 때문이다
+  constructor(private id: string, public name: string) {
+    // this.name = id;
+    // this.name = name;
   }
 
   describe(this: Department) {
-    console.log('Department: ' + this.name);
+    console.log(`Department (${this.id}): ${this.name}`);
   }
   addEmployee(employee: string) {
     this.employees.push(employee);
@@ -52,7 +51,7 @@ class Department {
   }
 }
 
-const accounting = new Department('Accounting');
+const accounting = new Department('d1', 'Accounting');
 accounting.addEmployee('Max');
 accounting.addEmployee('Manu');
 
