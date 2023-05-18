@@ -28,34 +28,79 @@
 class Department {
   // private id: string;
   // private name: string;
-  private employees: string[] = [];
+  // protected: private와 비슷하지만 확장하는 모든 클래스에서도 사용이 가능하다
+  // 변경되면 안되는 특정필드의 경우 readonly를 더해준다
+  // readonly는 초괴화 후에는 변경이 안된다⭐
+  protected employees: string[] = [];
 
   // name은 public이어야 하는데
   // 이는 동일한 이름으로 속성을 만들고 싶다는 것을
   // 타입스크립트에게 알리는 명시적인 명령이기 때문이다
-  constructor(private id: string, public name: string) {
+  constructor(private readonly id: string, public name: string) {
     // this.name = id;
     // this.name = name;
   }
 
   describe(this: Department) {
-    console.log(`Department (${this.id}): ${this.name}`);
+    console.log(`Department(${this.id}): ${this.name}`);
   }
+
   addEmployee(employee: string) {
     this.employees.push(employee);
   }
 
   printEmployeeInformation() {
-    console.log(this.employees.length);
+    // console.log(this.employees.length);
     console.log(this.employees);
   }
 }
 
-const accounting = new Department('d1', 'Accounting');
-accounting.addEmployee('Max');
-accounting.addEmployee('Manu');
+// ## 상속
+class ITDepartment extends Department {
+  // 비어있어도 생성자를 호출할 수 있다
+  // 부모의 것을 상속받았기 때문이다.
+  constructor(id: string, public admins: string[]) {
+    super(id, 'IT'); // 부모 클래스의 생성자를 호출한다
+    // 다른 특수한 속성을 할당하려면 super부터 호출해야한다
+  }
+}
 
-accounting.describe();
+class AccountingDepartment extends Department {
+  constructor(id: string, private reports: string[]) {
+    super(id, 'Accounting');
+  }
+
+  addEmployee(name: string) {
+    if (name === 'Max') {
+      return;
+    }
+
+    this.employees.push(name);
+    // 상속받는 클래스에선 private 속성에 접근만 가능하고
+    // 수정은 할 수 없다.
+  }
+
+  addReport(text: string) {
+    this.reports.push(text);
+  }
+  printReports() {
+    console.log(this.reports);
+  }
+}
+
+const accountingIt = new ITDepartment('d1', ['MAX']);
+
+accountingIt.addEmployee('Max');
+accountingIt.addEmployee('Manu');
+
+accountingIt.describe();
+accountingIt.printEmployeeInformation();
+console.log(accountingIt);
+
+const accounting = new AccountingDepartment('d2', []);
+accounting.addReport('Someting went wrong....');
+accounting.addEmployee('Manu');
+accounting.printReports();
 accounting.printEmployeeInformation();
 
 // const accountingCopy = { name: 'Dummy', describe: accounting.describe };
