@@ -24,18 +24,9 @@
  *
  *  */
 
-// 키와 값의 type을 정의한다
 class Department {
-  // private id: string;
-  // private name: string;
-  // protected: private와 비슷하지만 확장하는 모든 클래스에서도 사용이 가능하다
-  // 변경되면 안되는 특정필드의 경우 readonly를 더해준다
-  // readonly는 초괴화 후에는 변경이 안된다⭐
   protected employees: string[] = [];
 
-  // name은 public이어야 하는데
-  // 이는 동일한 이름으로 속성을 만들고 싶다는 것을
-  // 타입스크립트에게 알리는 명시적인 명령이기 때문이다
   constructor(private readonly id: string, public name: string) {
     // this.name = id;
     // this.name = name;
@@ -57,17 +48,38 @@ class Department {
 
 // ## 상속
 class ITDepartment extends Department {
-  // 비어있어도 생성자를 호출할 수 있다
-  // 부모의 것을 상속받았기 때문이다.
   constructor(id: string, public admins: string[]) {
-    super(id, 'IT'); // 부모 클래스의 생성자를 호출한다
-    // 다른 특수한 속성을 할당하려면 super부터 호출해야한다
+    super(id, 'IT');
   }
 }
 
 class AccountingDepartment extends Department {
+  private lastReport: string;
+
+  // getter는 값을 가지고 올 때 함수나 메소드를 실행하는 속성
+  // 개발자가 더 복잡한 로직을 추가할 수 있게 한다
+  // getter 메소드는 반드신 반환을 해야 한다
+  // getter & setter : 로직을 캡슐화하고 속성을 읽거나 설정하려 할 때
+  // 실행되어야 하느 ㅈ추가적인 로직을 추가하는 데 유용
+  get mostRecentReport() {
+    if (this.lastReport) {
+      return this.lastReport;
+    }
+
+    throw new Error('No report found.');
+  }
+
+  // setter: 인자를 설정해야 하므로 매개변수를 입력한다
+  set mostRecentReport(value: string) {
+    if (!value) {
+      throw new Error('Please pass in a valid value!');
+    }
+    this.addReport(value);
+  }
+
   constructor(id: string, private reports: string[]) {
     super(id, 'Accounting');
+    this.lastReport = reports[0];
   }
 
   addEmployee(name: string) {
@@ -76,12 +88,11 @@ class AccountingDepartment extends Department {
     }
 
     this.employees.push(name);
-    // 상속받는 클래스에선 private 속성에 접근만 가능하고
-    // 수정은 할 수 없다.
   }
 
   addReport(text: string) {
     this.reports.push(text);
+    this.lastReport = text;
   }
   printReports() {
     console.log(this.reports);
@@ -98,12 +109,13 @@ accountingIt.printEmployeeInformation();
 console.log(accountingIt);
 
 const accounting = new AccountingDepartment('d2', []);
+accounting.mostRecentReport = 'Year End Report';
+console.log(accounting.mostRecentReport);
+// 메소드로서 실행하는 게 아니라 일반 속성처럼 접근하므로 괄호쌍 없이 입력한다
+// accounting.mostRecentReport() (X)
+// report가 없으면 에러가 발생한다
+
 accounting.addReport('Someting went wrong....');
 accounting.addEmployee('Manu');
 accounting.printReports();
 accounting.printEmployeeInformation();
-
-// const accountingCopy = { name: 'Dummy', describe: accounting.describe };
-// accountingCopy.describe(); // undefined
-// 그 이유는 이 클래스나 정의된 특정 클래스를 기반으로 하지 않고
-// 더미 객체로서 describe을 생성했기 때문이다
