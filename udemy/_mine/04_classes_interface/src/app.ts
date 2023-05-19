@@ -25,11 +25,19 @@
  *  */
 
 class Department {
+  static fiscalYear = 2020;
   protected employees: string[] = [];
-
   constructor(private readonly id: string, public name: string) {
     // this.name = id;
     // this.name = name;
+  }
+
+  // 정적 메소드로 만드려면 앞에 정적 키워드를 추가한 다음
+  // 객체를 반환해야 합니다
+  static createEmployee(name: string) {
+    return {
+      name: name,
+    };
   }
 
   describe(this: Department) {
@@ -43,6 +51,7 @@ class Department {
   printEmployeeInformation() {
     // console.log(this.employees.length);
     console.log(this.employees);
+    // console.log(Department.fiscalYear);
   }
 }
 
@@ -99,6 +108,9 @@ class AccountingDepartment extends Department {
   }
 }
 
+const employee1 = Department.createEmployee('Max');
+console.log(employee1, Department.fiscalYear);
+
 const accountingIt = new ITDepartment('d1', ['MAX']);
 
 accountingIt.addEmployee('Max');
@@ -119,3 +131,14 @@ accounting.addReport('Someting went wrong....');
 accounting.addEmployee('Manu');
 accounting.printReports();
 accounting.printEmployeeInformation();
+
+// 정적 속성과 메소드
+/**
+ * 클래스의 인스턴스에서 접근할 수 없느 속성과 메소드를
+ * 클래스에 추가할 수 있다
+ *
+ * 새 클래스 이름을 먼저 호출하지 않고 클래스에 직접 접근하는 것
+ *
+ * 주로 논리적으로 그룹화하거나 클래스에 매핑하려는 유틸리티 함수나
+ * 클래스에 저장하고자 하는 전역 함수에 사용된다
+ */
