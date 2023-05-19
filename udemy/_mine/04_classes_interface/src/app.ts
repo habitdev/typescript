@@ -24,10 +24,11 @@
  *
  *  */
 
-class Department {
+abstract class Department {
   static fiscalYear = 2020;
   protected employees: string[] = [];
-  constructor(private readonly id: string, public name: string) {
+
+  constructor(protected readonly id: string, public name: string) {
     // this.name = id;
     // this.name = name;
   }
@@ -40,10 +41,16 @@ class Department {
     };
   }
 
-  describe(this: Department) {
+  // abstract: 함수를 만들어만 놓고 상세한 내용은 각 클래스에서 하도록 한다
+  // 함수가 abstract라면 이를 가지고 있는 클래스에도 abstract를 붙인다
+  // 그리고 중괄호는 없어야 하며
+  // 보유해야 하는 타입을 추가하지 말고 반환하도록 해야 한다
+  abstract describe(this: Department): void;
+  /*
+  abstract describe(this: Department) {
     console.log(`Department(${this.id}): ${this.name}`);
   }
-
+*/
   addEmployee(employee: string) {
     this.employees.push(employee);
   }
@@ -59,6 +66,10 @@ class Department {
 class ITDepartment extends Department {
   constructor(id: string, public admins: string[]) {
     super(id, 'IT');
+  }
+
+  describe() {
+    console.log('IT Department - ID: ' + this.id);
   }
 }
 
@@ -89,6 +100,10 @@ class AccountingDepartment extends Department {
   constructor(id: string, private reports: string[]) {
     super(id, 'Accounting');
     this.lastReport = reports[0];
+  }
+
+  describe() {
+    console.log('Accounting Department - ID: ' + this.id);
   }
 
   addEmployee(name: string) {
@@ -129,8 +144,10 @@ console.log(accounting.mostRecentReport);
 
 accounting.addReport('Someting went wrong....');
 accounting.addEmployee('Manu');
-accounting.printReports();
-accounting.printEmployeeInformation();
+// accounting.printReports();
+// accounting.printEmployeeInformation();
+
+accounting.describe();
 
 // 정적 속성과 메소드
 /**
