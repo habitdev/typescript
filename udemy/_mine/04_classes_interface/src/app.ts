@@ -73,8 +73,11 @@ class ITDepartment extends Department {
   }
 }
 
+// 회계 부서는 하나로 구현해야 하는 경우 여러번 수동으로
+// 호출하지 않도록 constructor 앞에 private를 붙인다
 class AccountingDepartment extends Department {
   private lastReport: string;
+  private static instance: AccountingDepartment;
 
   // getter는 값을 가지고 올 때 함수나 메소드를 실행하는 속성
   // 개발자가 더 복잡한 로직을 추가할 수 있게 한다
@@ -97,9 +100,24 @@ class AccountingDepartment extends Department {
     this.addReport(value);
   }
 
-  constructor(id: string, private reports: string[]) {
+  private constructor(id: string, private reports: string[]) {
     super(id, 'Accounting');
     this.lastReport = reports[0];
+  }
+
+  static getInstance() {
+    // AccountingDepartment에 instance가 있는 지를 확인하기 위해
+    // 변수 instance를 생성하고
+    // instance에 AccountingDepartment 클래스를 넣어
+    // AccountingDepartment에 접근할 수 있도록 한다..?
+    if (AccountingDepartment.instance) {
+      return this.instance;
+      // 이미 인스턴스를 가지고 있다면 이를 반환하지 않고
+    }
+
+    // 그렇지 않다면 새 인스턴스를 생성합니다.
+    this.instance = new AccountingDepartment('d2', []);
+    return this.instance;
   }
 
   describe() {
@@ -135,7 +153,12 @@ accountingIt.describe();
 accountingIt.printEmployeeInformation();
 console.log(accountingIt);
 
-const accounting = new AccountingDepartment('d2', []);
+// const accounting = new AccountingDepartment('d2', []);
+const accounting = AccountingDepartment.getInstance();
+const accounting2 = AccountingDepartment.getInstance();
+
+console.log(accounting === accounting2);
+
 accounting.mostRecentReport = 'Year End Report';
 console.log(accounting.mostRecentReport);
 // 메소드로서 실행하는 게 아니라 일반 속성처럼 접근하므로 괄호쌍 없이 입력한다
@@ -158,4 +181,14 @@ accounting.describe();
  *
  * 주로 논리적으로 그룹화하거나 클래스에 매핑하려는 유틸리티 함수나
  * 클래스에 저장하고자 하는 전역 함수에 사용된다
+ */
+
+/**
+ * 싱글톤 패턴
+ *
+ * 특정 클래스의 인스턴스를 정확히 하나만 갖도록 한다
+ * 이 패턴은 정적 메소드나 속성을 사용할 수 없거나 사용하지 않고자 하는 동시에
+ * 클래스를 기바으로 여러 객체를 만들 수는 없지만 항상 클래스를 기반으로
+ * 정확히 하나의 객체만 가질 수 있도록 하고자 할 때 유용할 수 있다
+ *
  */
