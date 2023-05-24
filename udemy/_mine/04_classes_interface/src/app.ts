@@ -35,11 +35,13 @@
  *
  * 추상 클래스는 구조와 실제 코드를 함께 작성할 수 있다!
  *
+ * 인터페이스 내엔 public, private 등은 지정할 수 없지만
+ * readonly는 가능하다
  *
  *  */
 
 interface Greetable {
-  name: string;
+  readonly name: string;
   // age: number;
   greet(phrase: string): void;
 }
@@ -77,3 +79,4 @@ user1 = new Person('Max');
 user1.greet('Hi there - I am ');
 console.log(user1);
 
+/** 클래스가 greet 메소드를 가지고 있고 다른 클래스도 이를 가지고 있는 지 확인하고자 할 때 */
