@@ -40,8 +40,13 @@
  *
  *  */
 
-interface Greetable {
+// name 속성을 입력했는지 확인할 수 있는 인터페이스
+interface Named {
   readonly name: string;
+}
+
+interface Greetable extends Named {
+  // readonly name: string;
   // age: number;
   greet(phrase: string): void;
 }
