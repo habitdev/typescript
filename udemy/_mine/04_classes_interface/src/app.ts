@@ -42,18 +42,29 @@
 
 /**  */
 // type Addfn = (num1: number, num2: number) => number;
-interface Addfn  {
+interface Addfn {
   (num1: number, num2: number): number;
   // 매개변수: 리턴 타입
 }
 let add: Addfn;
-add = (num1: number, num2: number) {
+add = (num1: number, num2: number) => {
   return num1 + num2;
-}
+};
 
-/** name 속성을 입력했는지 확인할 수 있는 인터페이스 */
+/** name 속성을 입력했는지 확인할 수 있는 인터페이스
+ * Named 기반의 모든 클래스가 문자열이어야 한다고 설정하고 싶지는 않은 경우,
+ * 속성 이름 다음에 물음표를 추가하여 선택적 속성을 지정할 수 있습니다
+ * outputName? : string
+ *
+ * => 타입스크립트는 이 속성이 이 인터페이스를 구현하는 클래스 내에 있지만
+ * 반드시 그렇지는 않다고 인식하게 됩니다.
+ *
+ *
+ * 선택적 속성은 클래스에서도 outputName?로 작성한다
+ */
 interface Named {
-  readonly name: string;
+  readonly name?: string;
+  outputName?: string;
 }
 
 interface Greetable extends Named {
@@ -67,15 +78,23 @@ interface Greetable extends Named {
 // 상속은 하나의 클래스만 지정가능하지만
 // 인터페이스는 쉼표로 구분하여 여러 개를 구현할 수 있다
 class Person implements Greetable {
-  name: string;
+  name?: string;
   age = 30;
 
-  constructor(name: string) {
-    this.name = name;
+  constructor(name?: string) {
+    // 선택적 요소로 표시하지 않으면 기본값이 없이 이름을 입력하지 않은 경우 
+    // 인스턴스를 생성할 수 없다 (오류)
+    if (name) {
+      this.name = name;
+    }
   }
 
   greet(phrase: string): void {
-    console.log(phrase + '' + this.name);
+    if (this.name) {
+      console.log(phrase + '' + this.name);
+    } else {
+      console.log('Hi!');
+    }
   }
 }
 
@@ -90,7 +109,7 @@ user1 = {
 };
 */
 
-user1 = new Person('Max');
+user1 = new Person();
 
 user1.greet('Hi there - I am ');
 console.log(user1);
