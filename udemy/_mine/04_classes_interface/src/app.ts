@@ -40,7 +40,18 @@
  *
  *  */
 
-// name 속성을 입력했는지 확인할 수 있는 인터페이스
+/**  */
+// type Addfn = (num1: number, num2: number) => number;
+interface Addfn  {
+  (num1: number, num2: number): number;
+  // 매개변수: 리턴 타입
+}
+let add: Addfn;
+add = (num1: number, num2: number) {
+  return num1 + num2;
+}
+
+/** name 속성을 입력했는지 확인할 수 있는 인터페이스 */
 interface Named {
   readonly name: string;
 }
