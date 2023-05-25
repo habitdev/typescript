@@ -190,3 +190,21 @@ if (userInputElement) {
   // 값이 있는 경우 ()로 감싸고 형변환을 한다
   (userInputElement as HTMLInputElement).value = 'Hi there!';
 }
+
+/**
+ * 인덱스 타입:
+ * 객체가 지닐 수 있느 속성에 대해 보다 유연한 객체를 생성할 수 있게 해주는 기능
+ *
+ */
+
+interface ErrorContainer {
+  // id: number; // 인덱스는 이런 객체를 구축할 때엔 일종의 제약이 되므로 사용하지 않는다
+  // boolean타입은 지정할 수 없다
+  [prop: string]: string;
+  // prop이름은 string이어야 하며 에러 메시지도 string이다
+}
+
+const errorBag: ErrorContainer = {
+  email: 'Not a valid email',
+  username: 'Must start capital character',
+};
