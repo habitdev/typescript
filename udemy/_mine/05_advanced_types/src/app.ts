@@ -154,3 +154,35 @@ function moveAnimal(animal: Animal) {
 
 // runningSpeed은 bird에 없으므로 오류가 난다
 moveAnimal({ type: 'bird', flyingSpeed: 10 });
+
+/**
+ * 형 변환: 
+ * 타입스크립트가 직접 감지하지 못하는 특정 타입의 값을 타입스크립트에 알려주는 역할
+ * 
+ * 
+ */
+
+// const userInputElement = document.getElementById('user-input')!;
+// 느낌표(!)를 사용하여 느낌표 앞의 표현식을 null로 반환하지 않겠다고
+// 타입스크립트에게 인식 시킬 수 있다
+
+// 기본적으로 모든 HTML요소가 타입으로서 갖는 이 제너릭 타입이 특정 
+// HTML 요소인 속성을 지원하지 않기 때문이다
+// 타입 스크립트에게 userInputElement이 HTML요소임을 알리기 위해
+// 형변환을 사용하여 구현할 수 있다
+
+// const userInputElement = <HTMLInputElement>document.getElementById('user-input');
+// 코드의 타입을 <>안에 입력한다
+// tsconfig.json에서 dom lib를 사용하고 있어야 가능하다
+
+// 위의 방식은 리액트에서 사용하는 JSX와 비슷하므로 이를 구별할 수 있도록
+// 아래와 같이 변환할 수 도 있다
+// const userInputElement = document.getElementById('user-input') as HTMLInputElement;
+
+// null을 반환하지 않을거라는 확신이 있을 경우 아래와 같이 느낌표를 적어준다
+const userInputElement = document.getElementById('user-input')! as HTMLInputElement;
+
+// 확신이 없다면 if()문으로 검사 후 실행한다
+// 만약 if()문으로 검사할 경우 형변환은 제거해야 한다.
+
+userInputElement.value = 'Hi there!';
