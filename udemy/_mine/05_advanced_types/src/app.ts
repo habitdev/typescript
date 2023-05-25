@@ -50,6 +50,10 @@ type Universal = Combinable & Numeric;
  */
 
 // 1. 타입가드) 속성 타입 확인
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+function add(a: string, b: number): string;
+function add(a: number, b: string): string;
 function add(a: Combinable, b: Combinable) {
   // 이 부분이 타입가드
   // 유니온 타입일 경우 해당 변수가 어떤 타입을 가지고 있는 지 확인
@@ -59,6 +63,21 @@ function add(a: Combinable, b: Combinable) {
 
   return a + b;
 }
+
+// const result = add('Max', 'Sch');
+// 우리는 문자열을 더한 걸 알지만 타입스크립트는 모른다
+// 따라서 split을 하면 오류가 난다
+// result.split(' ')
+
+// const result = add('Max', 'Sch') as string;
+// as string를 붙여 타입스크립트가 알 수 있게 할 순 있지만
+// 최선의 방식은 아니다
+// 타입스크립트는 항상 문자열이 반환되는 것을 모르기때문에
+// 이 때 함수 오버로드를 사용할 수 있다
+
+// 함수 오버로드를 하면 아래의 코드를 실행할 수 있게 된다
+const result = add('Max', 'Sch');
+result.split(' ');
 
 // 2. 타입가드)속성 존재 여부
 type UnKnownEmployee = Employee | Admin;
@@ -208,3 +227,14 @@ const errorBag: ErrorContainer = {
   email: 'Not a valid email',
   username: 'Must start capital character',
 };
+
+/**
+ * 함수 오버로드:
+ * 동일한 함수에 대해 여러함수 시그니처를 정의할 수 있는 기능으로
+ * => 다양한 매개변수를 지닌 함수를 호출하는 여러가지 방법을 사용하여
+ * 함수 내에서 작업을 수행할 수 있게 해준다
+ *
+ * 주요함수 바로 위에 같은 잉름을 입력하는 것으로 중괄호가 없어야 한다
+ * 타입스크립트가 정확한 반환 타입을 모를 때 사용
+ *
+ */
