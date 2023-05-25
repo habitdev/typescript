@@ -43,7 +43,7 @@ type Universal = Combinable & Numeric;
 // 동일하게 가지고 있는 type이 number이기 때문이다
 
 /**
- * 타입가드: 
+ * 타입가드:
  * 특정 속성이나 메소드를 사용하기 전에 그것이 존재하는지 확인하거나 타입을 사용하기 전에 이 타입으로 어떤 작업을 수행할 수 있는지를 확인하는 개념 또는 방식
  * - 유니온 타입을 활용할 시 각 타입에 맞게 응용할 수 있도록 도와준다
  * - typeof, in, instanceof
@@ -110,3 +110,45 @@ function useVehicle(vehicle: Vehicle) {
 
 useVehicle(v1);
 useVehicle(v2);
+
+/**
+ * 특수한 typeof 타입가드나 타입가드를 도와주는 구별된 유니언을 사용할 수 있습니다
+ * 타입 가드를 쉽게 구현할 수있게 해주는 유니언 타입으로 작업을 수행할 때 사용할 수 있는 패턴으로 객체 타입으로 작업할 때도 사용할 수 있다
+ *
+ *
+ *
+ *
+ */
+
+interface Bird {
+  type: 'bird';
+  flyingSpeed: number;
+}
+
+interface Horse {
+  type: 'horse';
+  runningSpeed: number;
+}
+
+type Animal = Bird | Horse;
+function moveAnimal(animal: Animal) {
+  // 인터페이스로 작성하여 instanceof로 검사할 수 없다
+  let speed;
+  switch (animal.type) {
+    case 'bird':
+      speed = animal.flyingSpeed;
+
+      break;
+    case 'horse':
+      speed = animal.runningSpeed;
+      break;
+
+    default:
+      break;
+  }
+
+  console.log('Moving with speed: ' + speed);
+}
+
+// runningSpeed은 bird에 없으므로 오류가 난다
+moveAnimal({ type: 'bird', flyingSpeed: 10 });
