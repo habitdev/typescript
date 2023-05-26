@@ -56,4 +56,20 @@ function countAndDescribe<T extends Lengthy>(element: T): [T, string] {
 
 console.log(countAndDescribe(['Sports', 'Cooking']));
 
+/**
+ *
+ * keyof" 제약조건:
+ * 
+ */
+
+function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) {
+  return 'Value: ' + obj[key];
+}
+
+// extractAndConvert({}, 'name'); // 오류
+// U는 모든 T타입의 키어야 하는데 여기선
+// name이라는 키를 가진 object가 없기 때문에 오류가 난다
+extractAndConvert({name: 'Max'}, 'name');
+
+
 
