@@ -1,36 +1,28 @@
-/**
- * 제너릭:
- * 타입스크립트에만 있고 바닐라 자바스크립트에는 없다
- * 다른 프로그래밍 언어에도 있는 개념
- * 다른 타입과 연결되는 종류인데 그게 어떤 타입인지는 상관 없다
- *
- * 1. generic functions & classes
- * 2. constraints
- * 3. special typescript types
- */
+// 보통 제너릭 타입 하나만 사용한다면 T(type)를 입력하면 된다
+// 그 다음 타입을 이 함수 내에서 사용할 수 있도록 입력하면 되므로
+// objA: object를 objA: T로 입력한다
+// 보통 두번째 매개변수는 알파벳 순서에 따라 U를 입력한다
+// 제너릭 타입은 T와 U가 서로 다른 타입이 될 수 있다록 타입스크립트에 알려줄 수 있으므로 다양한 타입 데이터를 얻고자 하는 것을
+// 타입스크립트가 알게 해준다
 
-// const names:Array = ['Max', 'Manu'];
-// 에러
-// 제너릭 타입으로 1개의 argument가 있어야 한다
-const names = ['Max', 'Manu'];
-const names2: Array<string> = []; // string[]
-// names2[0].split(' ');
+// Object.assign:  출처 객체들의 모든 열거 가능한 자체 속성을 복사해 대상 객체에 붙여넣습니다. 그 후 대상 객체를 반환합니다.
+function merge<T extends object, U extends object>(objA: T, objB: U) {
+  return Object.assign(objA, objB);
+}
+// 에러 나..ㅠㅜㅠㅜㅠㅜ
+// T extends object로 수정
 
-// Array는 저장하는 요소가 어떤 것인지는 상관하지 않으나
-// 정보가 저장되는 것인지에 대해서는 확인한다.
-// 아무것도 입력하지 않더라도
-// const names: any[] = [];로 라도 설정하는 것이 낫다
+// console.log(merge({ name: 'Max' }, { age: 30 }));
+const mergedObj = merge<{ name: string; hobbies: string[] }, { age: number }>({ name: 'Max', hobbies: ['Sports'] }, { age: 30 });
+const mergedObj2 = merge<{ name: string }, { age: number }>({ name: 'Max' }, { age: 30 });
+// mergedObj.name; // 오류
+// 제너릭 타입이 없는 경우 타입스크립트는 mergedObj가 name을 가지고 있는 것을 모르기 때문이다
+// const mergedObj2 = merge<{ name: string }, { age: number }>({ name: 'Max' }, 30);
+// 위와 같이 작성하면 새로운 객체로 합쳐지지 않는다
+// 따라서, 객체의 정확한 구조도 상관하지 않겠다고 입력해야 한다
+// T와 U는 항상 객체여야 한다
+// T와 U의 제네릭 타입 제한 -> 제한하고자 하는 타입 다음에 
+// extends를 입력
+// 굳이 제한을 하지 않아도 되는 경우 유연하게 놔둔다
 
-// Promise는 자바스크립트 기능이라 타입스크립트는 지원하지 않는다
-// resolve, reject는 브라우저에서 두 함수를 자동으로 전달합니다
-// Promise<string> : 프로미스가 문자열을 반환할 것이다
-const promise: Promise<string> = new Promise((resolve, reject) => {
-  setTimeout(() => {
-    resolve('This is done!');
-  }, 2000);
-});
-
-// 제너릭 타입을 지정하지 않으면 메소드를 호출할 수 없다
-promise.then(data => {
-  data.split(' ');
-})
+console.log(mergedObj.age);
