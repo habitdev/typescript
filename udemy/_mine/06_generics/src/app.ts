@@ -59,7 +59,7 @@ console.log(countAndDescribe(['Sports', 'Cooking']));
 /**
  *
  * keyof" 제약조건:
- * 
+ *
  */
 
 function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) {
@@ -69,7 +69,69 @@ function extractAndConvert<T extends object, U extends keyof T>(obj: T, key: U) 
 // extractAndConvert({}, 'name'); // 오류
 // U는 모든 T타입의 키어야 하는데 여기선
 // name이라는 키를 가진 object가 없기 때문에 오류가 난다
-extractAndConvert({name: 'Max'}, 'name');
+extractAndConvert({ name: 'Max' }, 'name');
 
+/**
+ * 제너릭 클래스:
+ * 균일한 데이터가 되도록하여 문자열이나 숫자나 객체가 되도록
+ * 제너릭 클래스로 작성한다
+ *
+ */
 
+class DataStorage<T> {
+  private data: T[] = [];
 
+  addItem(item: T) {
+    this.data.push(item);
+  }
+
+  removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
+    this.data.splice(this.data.indexOf(item), 1);
+    // 1) 원시 값이 아닌 요소로 수행한 작업이 좋지는 않다
+    // 따라서, 객체나 배열로 작업ㅇ르 하는 경우 객체를 전달하면 indexOf는 작동하지 않는다
+    // {name: 'Max'}은 새로운 객체이기 때문이다
+
+    // 자바스크립트가 아무것도 찾지 못한다면 indexOf가 -1을 반환한다
+  }
+
+  getItems() {
+    return [...this.data];
+  }
+}
+
+const textStorage = new DataStorage<string>();
+textStorage.addItem('Max'); // string만 들어갈 수 있도록 설정했기 때문에 string만 적는다
+textStorage.addItem('Manu');
+textStorage.removeItem('Max');
+
+console.log(textStorage.getItems());
+
+const numberStorage = new DataStorage<number>();
+// 다양한 타입을 지정하여 여러 개의 DataStorage를 만들 수 있다
+// 유연하다
+
+const objStorage = new DataStorage<object>();
+const maxObj = { name: 'Max' };
+objStorage.addItem(maxObj);
+objStorage.addItem({ name: 'Manu' });
+// ...
+
+objStorage.removeItem(maxObj);
+console.log(objStorage.getItems());
+
+// 자바스크립트의 객체는 참조 타입으로 {name: 'Max'}를 제거해도
+// log에 {name: 'Max'}가 나온다
+// 1)번 설명으로..
+
+// 위의 objStorage.addItem({ name: 'Max' });와 objStorage.removeItem({ name: 'Max' });은 메모리에 있는 완전히 새로운 객체이므로 주소를 지니지 않아 작동하지 않는다
+// 따라서, 배열의 마지막 요소를 식별할 수 없으므로 항상 마지막 요소가 제거된다
+// => 'Max'가 아닌 'Manu' 제거
+// 해결법:
+// 1. item을 찾았는지 확인하는 것
+// 2. 정확히 같은 객체를 참조한다
+// objStorage.addItem({ name: 'Max' });가 아니라 변수를 만들어 할당한다.
+
+// 그러므로 이런 경우 객체가 아닌 다른 타입들만 저장이 가능하도록 제너릭 타입을 설정해준다...
