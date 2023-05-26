@@ -238,3 +238,29 @@ const errorBag: ErrorContainer = {
  * 타입스크립트가 정확한 반환 타입을 모를 때 사용
  *
  */
+
+
+/**
+ * 선택적 체이닝:
+ * 확실하지 않은 소스에서 데이터를 가져오는 어플이 있을 경우,
+ * 
+ * 
+ */
+
+
+const fetchedUserData = {
+  id: 'u1',
+  name: 'Max',
+  /*
+  job: {
+    title: 'CEO',
+    description: 'My own company'
+  }
+  */
+}
+
+
+// 어떠한 이유로 데이터를 가져올 수 없을 경우
+// console.log(fetchedUserData.job && fetchedUserData.job.title);
+// 타입스크립트 3.7버전 이상
+console.log(fetchedUserData?.job?.title);
