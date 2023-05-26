@@ -78,7 +78,7 @@ extractAndConvert({ name: 'Max' }, 'name');
  *
  */
 
-class DataStorage<T> {
+class DataStorage<T extends string | number | boolean> {
   private data: T[] = [];
 
   addItem(item: T) {
@@ -113,6 +113,9 @@ const numberStorage = new DataStorage<number>();
 // 다양한 타입을 지정하여 여러 개의 DataStorage를 만들 수 있다
 // 유연하다
 
+
+/* 
+// 객체 입력 
 const objStorage = new DataStorage<object>();
 const maxObj = { name: 'Max' };
 objStorage.addItem(maxObj);
@@ -121,6 +124,8 @@ objStorage.addItem({ name: 'Manu' });
 
 objStorage.removeItem(maxObj);
 console.log(objStorage.getItems());
+*/
+
 
 // 자바스크립트의 객체는 참조 타입으로 {name: 'Max'}를 제거해도
 // log에 {name: 'Max'}가 나온다
