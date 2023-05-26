@@ -113,7 +113,6 @@ const numberStorage = new DataStorage<number>();
 // 다양한 타입을 지정하여 여러 개의 DataStorage를 만들 수 있다
 // 유연하다
 
-
 /* 
 // 객체 입력 
 const objStorage = new DataStorage<object>();
@@ -125,7 +124,6 @@ objStorage.addItem({ name: 'Manu' });
 objStorage.removeItem(maxObj);
 console.log(objStorage.getItems());
 */
-
 
 // 자바스크립트의 객체는 참조 타입으로 {name: 'Max'}를 제거해도
 // log에 {name: 'Max'}가 나온다
@@ -140,3 +138,45 @@ console.log(objStorage.getItems());
 // objStorage.addItem({ name: 'Max' });가 아니라 변수를 만들어 할당한다.
 
 // 그러므로 이런 경우 객체가 아닌 다른 타입들만 저장이 가능하도록 제너릭 타입을 설정해준다...
+
+/** 보너스 개념) 제너릭 유틸리티 타입
+ * ❗타입스크립트에만 존재한다
+ *
+ * - Partial:
+ * 우리가 만든 타입 전체의 모든 속성을 선택적인 타입으로 바꾼다
+ * 따라서, 중괄호 쌍을 빈 객체로 설정하여 단계적으로 모든 요소를 추가할 수 있다
+ * 유일한 문제는 이를 반환할 수 없다는 것
+ * => CourseGoal의 Partial 타입이지 CourseGoal이 아니기 때문
+ * => 이는 return 시 courseGoal을 CourseGoal로 형 변환하여 해결할 수 있다
+ *
+ *
+ * - Readonly:
+ *
+ *
+ */
+
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(title: string, description: string, date: Date): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  // 빈 객체로 두면 아래에 속성을 대입 시 에러가 나므로
+  // CourseGoal로 타입을 설정한다
+  // 객체가 CourseGoal이 되는 객체임을 알려준다
+
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+
+  return courseGoal as CourseGoal;
+  // 이 시점에선 모든 항목에 데이터가 추가되어 CourseGoal이 된다
+
+  // return { title: title, description: description, completeUntil: date };
+}
+
+const namesArr: Readonly<string[]> = ['Max', 'Anna'];
+// namesArr.push('Manu');
+// Readonly를 붙임으로서 배열을 조작할 수 없게 됨
