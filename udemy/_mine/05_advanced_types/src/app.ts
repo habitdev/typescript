@@ -239,14 +239,12 @@ const errorBag: ErrorContainer = {
  *
  */
 
-
 /**
  * 선택적 체이닝:
  * 확실하지 않은 소스에서 데이터를 가져오는 어플이 있을 경우,
- * 
- * 
+ *
+ *
  */
-
 
 const fetchedUserData = {
   id: 'u1',
@@ -257,10 +255,20 @@ const fetchedUserData = {
     description: 'My own company'
   }
   */
-}
-
+};
 
 // 어떠한 이유로 데이터를 가져올 수 없을 경우
 // console.log(fetchedUserData.job && fetchedUserData.job.title);
 // 타입스크립트 3.7버전 이상
-console.log(fetchedUserData?.job?.title);
+// console.log(fetchedUserData?.job?.title);
+
+/** 널(Null) 병합
+ * 
+ * ?? 연산자: null 병합 연산자
+ * 이것이 null이거나 undefined면(빈 문자열이나 0이 아니면)
+ * 폴백을 사용해야 한다는 것
+ */
+
+const userInput = undefined;
+const stiredData = userInput ?? 'DEFAULT';
+console.log(stiredData);
