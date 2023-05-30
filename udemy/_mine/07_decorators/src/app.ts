@@ -28,12 +28,12 @@ function Logger(logstring: string) {
 function WithTemplate(template: string, hookId: string) {
   console.log('TEMPLATE FACTORY');
 
-  return function <T extends { new (...args: any[]): { name: string } }>(originalConstructor: T) {
+  return function <T extends { new (..._: any[]): { name: string } }>(originalConstructor: T) {
     // return function (_: Function) {
     // "_"은 입력해서 존재는 알지만 쓰지 않겠다고 명시할 경우 사용
 
     return class extends originalConstructor {
-      constructor(...args: any[]) {
+      constructor(..._: any[]) {
         super();
         console.log('Rendering template');
         const hookEl = document.getElementById(hookId);
