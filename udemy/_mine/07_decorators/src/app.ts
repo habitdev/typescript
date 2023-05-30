@@ -16,6 +16,8 @@
 
 // 클래스 통째에 적용되는 데코레이터
 function Logger(logstring: string) {
+  console.log('LOGGER FACTORY');
+
   return function (constructor: Function) {
     // 새 함수를 반환하는 함수로 변경
     console.log(logstring);
@@ -24,19 +26,29 @@ function Logger(logstring: string) {
 }
 
 function WithTemplate(template: string, hookId: string) {
-  return function (constructor: any) {
+  console.log('TEMPLATE FACTORY');
+
+  return function <T extends { new (...args: any[]): { name: string } }>(originalConstructor: T) {
     // return function (_: Function) {
     // "_"은 입력해서 존재는 알지만 쓰지 않겠다고 명시할 경우 사용
-    const hookEl = document.getElementById(hookId);
-    const person = new constructor();
-    if (hookEl) {
-      hookEl.innerHTML = template;
-      hookEl.querySelector('h1')!.textContent = person.name;
-    }
+
+    return class extends originalConstructor {
+      constructor(...args: any[]) {
+        super();
+        console.log('Rendering template');
+        const hookEl = document.getElementById(hookId);
+        // const person = new originalConstructor();
+        if (hookEl) {
+          hookEl.innerHTML = template;
+          hookEl.querySelector('h1')!.textContent = this.name;
+        }
+      }
+    };
   };
 }
 
 // @Logger('LOGGING - PERSON') // @은 특별한 식별자
+@Logger('LOGGING')
 @WithTemplate('<h1>My Person Object!</h1>', 'app')
 // 데코레이터 함수를 실행하려는 게 아니라 데코레이터 함수와 같은 걸 반환해 줄 함수를 실행하는 것
 class Person {
@@ -54,4 +66,65 @@ console.log(pers);
 /**
  * 데코레이터를 만드는 대신, 데코레이터 팩토리(factory)를 정의할 수 있다
  * 데코레이터 함수를 도출하는데 어떤 대상에 데코레이터를 할당할 때 설정할 수 있도록 해준다
+ *
+ * 데코레이터를 사용할 수 있는 클래스나 어떤 곳에 하나보다 많은 데코레이터를 사용할 수 없다
+ * 데코레이터는 가장 마지막부터 위로 실행된다
+ *
+ *
  */
+
+function Log(target: any, propertyName: string | Symbol) {
+  console.log('Property decorator!');
+  console.log(target, propertyName);
+}
+
+function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
+  console.log('Accessor decorator');
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+function Log3(target: any, name: string | Symbol, descriptor: PropertyDescriptor) {
+  console.log('Method decorator');
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+function Log4(target: any, name: string | Symbol, position: number) {
+  console.log('Parameter decorator');
+  console.log(target);
+  console.log(name);
+  console.log(position);
+}
+
+class Product {
+  @Log
+  title: string;
+  private _price: number;
+
+  @Log2
+  set price(val: number) {
+    if (val > 0) {
+      this._price = val;
+      // 양수일 경우만
+    } else {
+      throw new Error('Invalid price = should be positive!');
+    }
+  }
+
+  constructor(title: string, price: number) {
+    this.title = title;
+    this._price = price;
+  }
+
+  @Log3
+  getPriceWithTax(@Log4 tax: number) {
+    return this._price * (1 + tax);
+  }
+}
+
+const product1 = new Product('Book', 19);
+const product2 = new Product('Book 2 ', 29);
+/** 데코레이터는 클래스가 정의되었을 때만 작동하는 함수 */
