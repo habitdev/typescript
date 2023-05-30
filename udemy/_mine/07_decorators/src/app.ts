@@ -15,14 +15,29 @@
  */
 
 // 클래스 통째에 적용되는 데코레이터
-function Logger(logstring: string) { 
+function Logger(logstring: string) {
   return function (constructor: Function) {
     // 새 함수를 반환하는 함수로 변경
     console.log(logstring);
     console.log(constructor);
   };
 }
-@Logger('LOGGING - PERSON') // @은 특별한 식별자
+
+function WithTemplate(template: string, hookId: string) {
+  return function (constructor: any) {
+    // return function (_: Function) {
+    // "_"은 입력해서 존재는 알지만 쓰지 않겠다고 명시할 경우 사용
+    const hookEl = document.getElementById(hookId);
+    const person = new constructor();
+    if (hookEl) {
+      hookEl.innerHTML = template;
+      hookEl.querySelector('h1')!.textContent = person.name;
+    }
+  };
+}
+
+// @Logger('LOGGING - PERSON') // @은 특별한 식별자
+@WithTemplate('<h1>My Person Object!</h1>', 'app')
 // 데코레이터 함수를 실행하려는 게 아니라 데코레이터 함수와 같은 걸 반환해 줄 함수를 실행하는 것
 class Person {
   name = 'Max';
