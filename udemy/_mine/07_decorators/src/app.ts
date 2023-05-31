@@ -162,3 +162,87 @@ const button = document.querySelector('button')!;
 button?.addEventListener('click', prt.showMessage);
 // prt가 아닌 this를 바인딩하므로 bind할 것을 지정해준다
 // 바인딩할 객체 지정
+
+/** 유효성 검사를 위한 데코레이터 */
+interface ValidatorConfig {
+  [property: string]: {
+    [validatableProp: string]: string[]; // ['required', 'positive']
+  };
+}
+
+const registerValidators: ValidatorConfig = {};
+
+function Required(target: any, propertyName: string) {
+  registerValidators[target.constructor.name] = {
+    ...registerValidators[target.constructor.name],
+    [propertyName]: ['required'],
+  };
+}
+
+function PositiveNumber(target: any, propertyName: string) {
+  registerValidators[target.constructor.name] = {
+    ...registerValidators[target.constructor.name], // 기존 저장된 것들을 먼저 불러온 후
+    [propertyName]: ['positive'], // 새로운 propertyName 추가
+  };
+}
+function validate(obj: any) {
+  const objValidatorConfig = registerValidators[obj.constructor.name];
+
+  if (!objValidatorConfig) {
+    // 유효성 검사를 할 객체가 하나도 없다
+    return true;
+  }
+
+  let isValid = true;
+  // prop 하나만 true여도 이상이 없다고 넘어가면 안되므로
+  // isValid를 이용하여 검사한다
+  for (const prop in objValidatorConfig) {
+    console.log(prop);
+
+    for (const validator of objValidatorConfig[prop]) {
+      switch (validator) {
+        case 'required':
+          isValid = isValid && !!obj[prop]; // 값이 있는 경우 true
+          break;
+
+        case 'positive':
+          isValid = isValid && obj[prop] > 0;
+          break;
+
+        default:
+          break;
+      }
+    }
+  }
+
+  return isValid;
+}
+class Course {
+  @Required
+  title: string;
+  @PositiveNumber
+  price: number;
+
+  constructor(tit: string, price: number) {
+    this.title = tit;
+    this.price = price;
+  }
+}
+
+const courseForm = document.querySelector('form')!;
+courseForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const titleEl = document.getElementById('title') as HTMLInputElement;
+  const priceEl = document.getElementById('price') as HTMLInputElement;
+
+  const title = titleEl.value;
+  const price = +priceEl.value; // +를 붙여 숫자로 변경
+
+  const createdCourse = new Course(title, price);
+
+  if (!validate(createdCourse)) {
+    alert('Invalid input, please try again!');
+    return;
+  }
+  console.log(createdCourse);
+});
