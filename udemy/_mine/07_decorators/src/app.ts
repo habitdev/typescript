@@ -175,14 +175,14 @@ const registerValidators: ValidatorConfig = {};
 function Required(target: any, propertyName: string) {
   registerValidators[target.constructor.name] = {
     ...registerValidators[target.constructor.name],
-    [propertyName]: ['required'],
+    [propertyName]:  [...(registerValidators[target.constructor.name]?.[propertyName] ?? []), 'required']
   };
 }
 
 function PositiveNumber(target: any, propertyName: string) {
   registerValidators[target.constructor.name] = {
     ...registerValidators[target.constructor.name], // 기존 저장된 것들을 먼저 불러온 후
-    [propertyName]: ['positive'], // 새로운 propertyName 추가
+      [propertyName]: [...(registerValidators[target.constructor.name]?.[propertyName] ?? []), 'positive'], // 새로운 propertyName 추가
   };
 }
 function validate(obj: any) {
