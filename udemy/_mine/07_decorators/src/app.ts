@@ -128,3 +128,37 @@ class Product {
 const product1 = new Product('Book', 19);
 const product2 = new Product('Book 2 ', 29);
 /** 데코레이터는 클래스가 정의되었을 때만 작동하는 함수 */
+
+// 자동으로 객체를 bind해주는 데코레이터 작성
+// function Autobind(target: any, methodName: string, descriptor: PropertyDescriptor) {
+function Autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+  const adjustDescriptor: PropertyDescriptor = {
+    configurable: true,
+    enumerable: false, // for in루프를 표시하지 않도록 함
+    get() {
+      const boundFunc = originalMethod.bind(this);
+      // this는 addEventListener로 변경할 수 없다
+      return boundFunc;
+    },
+  };
+
+  return adjustDescriptor;
+}
+
+class Printer {
+  message = 'This Works!';
+
+  @Autobind
+  showMessage() {
+    console.log(this.message);
+  }
+}
+
+const prt = new Printer();
+
+const button = document.querySelector('button')!;
+// !: 이것은 존재하며 null 이 아님을 표시
+button?.addEventListener('click', prt.showMessage);
+// prt가 아닌 this를 바인딩하므로 bind할 것을 지정해준다
+// 바인딩할 객체 지정
