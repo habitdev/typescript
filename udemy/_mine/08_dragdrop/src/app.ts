@@ -1,12 +1,26 @@
 // Code goes here!
+// Project Type
+// 입력받는 프로젝트 항목의 타입을 항상 기억해야하므로 따로 클래스로 만들어 관리한다
 
-// 싱글톤 클래스를 활용함
+// 열거형으로 status를 숫자로 사용한다
+// Project Type
+enum ProjectStatus {
+  Active,
+  Finished,
+}
+class Project {
+  constructor(public id: string, public title: string, public description: string, public people: number, public status: ProjectStatus) {}
+}
+
+// 싱글톤 클래스(객체의 인스턴스가 오직 1개만 생성)를 활용함
 // 외부에선 접근이 안되고 해당 클래스 내에서만 접근이 가능하다
-
 // Project State Management
+
+type Listener = (items: Project[]) => void; // 리스너 함수가 반환하는 값은 신경 쓰지 않습니다
+
 class ProjectState {
-  private listeners: any[] = [];
-  private projects: any[] = [];
+  private listeners: Listener[] = [];
+  private projects: Project[] = [];
   // 클래스를 통해 인스턴스를 생성할 필요 없이,
   // 클래스의 속성 또는 메서드를 사용하고자 한다면 static 키워드를 사용해 속성, 메서드를 정의
   private static instance: ProjectState;
@@ -21,17 +35,12 @@ class ProjectState {
     return this.instance;
   }
 
-  addListener(listenerFunc: Function) {
+  addListener(listenerFunc: Listener) {
     this.listeners.push(listenerFunc);
   }
 
   addProject(title: string, description: string, numOfPeople: number) {
-    const newProject = {
-      id: Math.random().toString(),
-      title: title,
-      description: description,
-      people: numOfPeople,
-    };
+    const newProject = new Project(Math.random().toString(), title, description, numOfPeople, ProjectStatus.Active);
     this.projects.push(newProject);
     for (const listenerFunc of this.listeners) {
       listenerFunc(this.projects.slice());
@@ -97,7 +106,7 @@ class ProjectList {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
   element: HTMLElement;
-  assignedProjects: any[];
+  assignedProjects: Project[];
 
   // 만들 리스트의 키워드: 'active' | 'finished'
   constructor(private type: 'active' | 'finished') {
@@ -105,17 +114,20 @@ class ProjectList {
     this.hostElement = document.getElementById('app') as HTMLDivElement;
     this.assignedProjects = []; // 배열 초기화
 
-    console.log(this.assignedProjects);
-    
-
     const importedNode = document.importNode(this.templateElement.content, true);
     this.element = importedNode.firstElementChild as HTMLElement; // section
     this.element.id = `${this.type}-projects`;
 
     // 프로젝트 리스트가 만들어진 후 renderProjects를 하기 때문에
     // renderContent가 먼저 실행된다
-    projectState.addListener((projects: any[]) => {
-      this.assignedProjects = projects;
+    projectState.addListener((projects: Project[]) => {
+      const relevantProjects = projects.filter((prj) => {
+        if (this.type === 'active') {
+          return prj.status === ProjectStatus.Active;
+        }
+        return prj.status === ProjectStatus.Finished;
+      });
+      this.assignedProjects = relevantProjects;
       this.renderProjects();
     });
 
@@ -125,11 +137,10 @@ class ProjectList {
 
   private renderProjects() {
     const listElem = document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
-    for (const projectItem of this.assignedProjects) {
+    listElem.innerHTML = '';
+    for (const prjItem of this.assignedProjects) {
       const listItem = document.createElement('li');
-      listItem.textContent = projectItem.title;
-      // listItem.textContent = projectItem.description;
-      // listItem.textContent = projectItem.people;
+      listItem.textContent = prjItem.title;
       listElem.appendChild(listItem);
     }
   }
