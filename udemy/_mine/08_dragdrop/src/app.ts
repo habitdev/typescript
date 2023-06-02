@@ -213,8 +213,10 @@ class ProjectInput {
       max: 5,
     };
 
+    // console.log(titleValidatable, descriptionValidatable, peopleValidatable);
     if (!validate(titleValidatable) || !validate(descriptionValidatable) || !validate(peopleValidatable)) {
       alert('Invalid input, please try again!');
+
       return;
     } else {
       return [enteredTitle, enteredDescription, parseFloat(enteredPeople)];
