@@ -1,4 +1,49 @@
 // Code goes here!
+
+// 싱글톤 클래스를 활용함
+// 외부에선 접근이 안되고 해당 클래스 내에서만 접근이 가능하다
+
+// Project State Management
+class ProjectState {
+  private listeners: any[] = [];
+  private projects: any[] = [];
+  // 클래스를 통해 인스턴스를 생성할 필요 없이,
+  // 클래스의 속성 또는 메서드를 사용하고자 한다면 static 키워드를 사용해 속성, 메서드를 정의
+  private static instance: ProjectState;
+
+  private constructor() {}
+
+  static getInstance() {
+    if (this.instance) {
+      return this.instance;
+    }
+    this.instance = new ProjectState();
+    return this.instance;
+  }
+
+  addListener(listenerFunc: Function) {
+    this.listeners.push(listenerFunc);
+  }
+
+  addProject(title: string, description: string, numOfPeople: number) {
+    const newProject = {
+      id: Math.random().toString(),
+      title: title,
+      description: description,
+      people: numOfPeople,
+    };
+    this.projects.push(newProject);
+    for (const listenerFunc of this.listeners) {
+      listenerFunc(this.projects.slice());
+    }
+  }
+}
+
+// 프로젝트 상태 예시를 생성
+// 아래에서 폼에 프로젝트 내용을 입력하면 리스트가 생성되는데
+// 이를 위한 상수
+const projectState = ProjectState.getInstance();
+
 // validate
 interface Validatable {
   value: string | number;
@@ -52,18 +97,41 @@ class ProjectList {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
   element: HTMLElement;
+  assignedProjects: any[];
 
   // 만들 리스트의 키워드: 'active' | 'finished'
   constructor(private type: 'active' | 'finished') {
     this.templateElement = document.getElementById('project-list')! as HTMLTemplateElement;
     this.hostElement = document.getElementById('app') as HTMLDivElement;
+    this.assignedProjects = []; // 배열 초기화
+
+    console.log(this.assignedProjects);
+    
 
     const importedNode = document.importNode(this.templateElement.content, true);
     this.element = importedNode.firstElementChild as HTMLElement; // section
     this.element.id = `${this.type}-projects`;
 
+    // 프로젝트 리스트가 만들어진 후 renderProjects를 하기 때문에
+    // renderContent가 먼저 실행된다
+    projectState.addListener((projects: any[]) => {
+      this.assignedProjects = projects;
+      this.renderProjects();
+    });
+
     this.attach();
     this.renderContent();
+  }
+
+  private renderProjects() {
+    const listElem = document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
+    for (const projectItem of this.assignedProjects) {
+      const listItem = document.createElement('li');
+      listItem.textContent = projectItem.title;
+      // listItem.textContent = projectItem.description;
+      // listItem.textContent = projectItem.people;
+      listElem.appendChild(listItem);
+    }
   }
 
   private renderContent() {
@@ -157,7 +225,7 @@ class ProjectInput {
       // 튜플은 배열이기 때문에 배열인지 검사한다
 
       const [title, desc, people] = userInput;
-      console.log(title, desc, people);
+      projectState.addProject(title, desc, people);
       this.clearInputs();
     }
   }
