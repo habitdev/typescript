@@ -20,17 +20,15 @@ type Listener<T> = (items: T[]) => void; // 리스너 함수가 반환하는 값
 
 class State<T> {
   protected listeners: Listener<T>[] = [];
-  // protected: 외부에선 접근을 못하지만 상속받는 클래스에서는 
+  // protected: 외부에선 접근을 못하지만 상속받는 클래스에서는
   // 어디서나 접그닝 가능하다는 뜻
 
-  
   addListener(listenerFunc: Listener<T>) {
     this.listeners.push(listenerFunc);
   }
 }
 
 class ProjectState extends State<Project> {
-  
   private projects: Project[] = [];
   // 클래스를 통해 인스턴스를 생성할 필요 없이,
   // 클래스의 속성 또는 메서드를 사용하고자 한다면 static 키워드를 사용해 속성, 메서드를 정의
@@ -47,7 +45,6 @@ class ProjectState extends State<Project> {
     this.instance = new ProjectState();
     return this.instance;
   }
-
 
   addProject(title: string, description: string, numOfPeople: number) {
     const newProject = new Project(Math.random().toString(), title, description, numOfPeople, ProjectStatus.Active);
@@ -154,6 +151,31 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
   abstract renderContent(): void;
 }
 
+// Project Item Class
+class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+  private project: Project;
+  /**
+   *
+   * @param hostId 사용하는 템플릿 id
+   * @param project Project를 가져온다
+   */
+  constructor(hostId: string, project: Project) {
+    super('single-project', hostId, false, project.id);
+    this.project = project;
+
+    this.configure();
+    this.renderContent();
+  }
+
+  configure() {}
+
+  renderContent() {
+    this.element.querySelector('h2')!.textContent = this.project.title;
+    this.element.querySelector('h3')!.textContent = this.project.people.toString();
+    this.element.querySelector('p')!.textContent = this.project.description;
+  }
+}
+
 // Project List Class
 class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   assignedProjects: Project[];
@@ -193,9 +215,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
     const listElem = document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
     listElem.innerHTML = '';
     for (const prjItem of this.assignedProjects) {
-      const listItem = document.createElement('li');
-      listItem.textContent = prjItem.title;
-      listElem.appendChild(listItem);
+      new ProjectItem(this.element.querySelector('ul')!.id, prjItem);
     }
   }
 }
