@@ -61,6 +61,18 @@ class ProjectState extends State<Project> {
   addProject(title: string, description: string, numOfPeople: number) {
     const newProject = new Project(Math.random().toString(), title, description, numOfPeople, ProjectStatus.Active);
     this.projects.push(newProject);
+    this.updateListeners();
+  }
+
+  moveProject(projectId: string, newStatus: ProjectStatus) {
+    const project = this.projects.find((prj) => prj.id === projectId);
+    if (project && project.status !== newStatus) {
+      project.status = newStatus;
+      this.updateListeners();
+    }
+  }
+
+  private updateListeners() {
     for (const listenerFunc of this.listeners) {
       listenerFunc(this.projects.slice());
     }
@@ -190,7 +202,9 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
 
   @AutoBind
   dragStartHandler(event: DragEvent) {
-    console.log(event);
+    event.dataTransfer!.setData('text/plain', this.project.id);
+    // 데이터 전송 프로퍼티가 있고 그 프로퍼티에서 데이터를 드래그 이벤트에 붙인다
+    event.dataTransfer!.effectAllowed = 'move'; // 마우스 커서 변경
   }
 
   dragEndHandler(_: DragEvent) {}
@@ -236,11 +250,19 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
   }
 
   @AutoBind
-  dragOverHandler(_: DragEvent) {
-    const listElem = this.element.querySelector('ul')!;
-    listElem.classList.add('droppable');
+  dragOverHandler(event: DragEvent) {
+    if (event.dataTransfer && event.dataTransfer.types[0] === 'text/plain') {
+      event.preventDefault(); // 드롭을 허용하지 않겠다(드래그만 가능)
+      const listElem = this.element.querySelector('ul')!;
+      listElem.classList.add('droppable');
+    }
   }
-  dropHandler(_: DragEvent) {}
+
+  @AutoBind
+  dropHandler(event: DragEvent) {
+    const prjId = event.dataTransfer!.getData('text/plain');
+    projectState.moveProject(prjId, this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Finished);
+  }
 
   @AutoBind
   dragLeaveHandler(_: DragEvent) {
