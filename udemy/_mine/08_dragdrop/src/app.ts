@@ -7,7 +7,7 @@ interface Draggable {
 }
 interface DragTarget {
   dragOverHandler(event: DragEvent): void;
-  dragHandler(event: DragEvent): void;
+  dropHandler(event: DragEvent): void;
   dragLeaveHandler(event: DragEvent): void;
 }
 
@@ -191,13 +191,9 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
   @AutoBind
   dragStartHandler(event: DragEvent) {
     console.log(event);
-    
   }
 
-  dragEndHandler(_: DragEvent) {
-    console.log('DragEnd');
-    
-  }
+  dragEndHandler(_: DragEvent) {}
 
   configure() {
     this.element.addEventListener('dragstart', this.dragStartHandler);
@@ -213,7 +209,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
 }
 
 // Project List Class
-class ProjectList extends Component<HTMLDivElement, HTMLElement> {
+class ProjectList extends Component<HTMLDivElement, HTMLElement> implements DragTarget {
   assignedProjects: Project[];
 
   // 만들 리스트의 키워드: 'active' | 'finished'
@@ -235,10 +231,28 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
       this.renderProjects();
     });
 
+    this.configure();
     this.renderContent();
   }
 
-  configure() {}
+  @AutoBind
+  dragOverHandler(_: DragEvent) {
+    const listElem = this.element.querySelector('ul')!;
+    listElem.classList.add('droppable');
+  }
+  dropHandler(_: DragEvent) {}
+
+  @AutoBind
+  dragLeaveHandler(_: DragEvent) {
+    const listElem = this.element.querySelector('ul')!;
+    listElem.classList.remove('droppable');
+  }
+
+  configure() {
+    this.element.addEventListener('dragover', this.dragOverHandler);
+    this.element.addEventListener('dragleave', this.dragLeaveHandler);
+    this.element.addEventListener('drop', this.dropHandler);
+  }
 
   renderContent() {
     const listId = `${this.type}-projects-list`;
