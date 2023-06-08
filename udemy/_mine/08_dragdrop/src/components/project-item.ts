@@ -7,7 +7,7 @@
 import { Draggable } from '../models/drag-drop.js';
 // 이미 컴파일된 파일을 자바스크립트가 가져와야 하므로 JS 파일을 import한다
 import { Project } from '../models/project.js';
-import { Component } from '../components/base-component.js';
+import Component from './base-component.js';
 import { AutoBind } from '../decorators/autobind.js';
 
 

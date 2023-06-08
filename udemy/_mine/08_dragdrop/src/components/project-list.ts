@@ -5,7 +5,7 @@
 /// <reference path="../models/drag-drop.ts"/> //
 
 import { DragTarget } from '../models/drag-drop.js';
-import { Component } from '../components/base-component.js';
+import Component from './base-component.js';
 import { AutoBind } from '../decorators/autobind.js';
 import { Project, ProjectStatus } from '../models/project.js';
 import { projectState } from '../state/project-state.js';

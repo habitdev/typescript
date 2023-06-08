@@ -3,9 +3,9 @@
 /// <reference path="../util/validation.ts"/> //
 /// <reference path="../state/project-state.ts"/> //
 
-import { Component } from './base-component.js';
-import { Validatable, validate } from '../util/validation.js';
-import { AutoBind } from '../decorators/autobind.js';
+import Component from './base-component.js'; // default로 선언된 것만 import
+import * as Validation from '../util/validation.js'; // 그룹화하기
+import { AutoBind as AutoBind } from '../decorators/autobind.js'; // 이름 변경해서 사용하기
 import { projectState } from '../state/project-state.js';
 
 // namespace App {
@@ -36,16 +36,16 @@ export class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
     const enteredDescription = this.descriptionInputElement.value;
     const enteredPeople = this.peopleInputElement.value;
 
-    const titleValidatable: Validatable = {
+    const titleValidatable: Validation.Validatable = {
       value: enteredTitle,
       required: true,
     };
-    const descriptionValidatable: Validatable = {
+    const descriptionValidatable: Validation.Validatable = {
       value: enteredDescription,
       required: true,
       minLength: 5,
     };
-    const peopleValidatable: Validatable = {
+    const peopleValidatable: Validation.Validatable = {
       value: +enteredPeople,
       required: true,
       min: 1,
@@ -53,7 +53,9 @@ export class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
     };
 
     // console.log(titleValidatable, descriptionValidatable, peopleValidatable);
-    if (!validate(titleValidatable) || !validate(descriptionValidatable) || !validate(peopleValidatable)) {
+    if (!Validation.validate(titleValidatable) || 
+    !Validation.validate(descriptionValidatable) || 
+    !Validation.validate(peopleValidatable)) {
       alert('Invalid input, please try again!');
 
       return;

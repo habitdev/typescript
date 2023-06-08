@@ -3,7 +3,11 @@
   // 제너릭 클래스를 이용
   // 직접적인 인스턴스화가 이뤄지지 않도록 추상클래스로 변경
   // 추상 클래스는 항상 상속을 이용한다
-  export abstract class Component<T extends HTMLElement, U extends HTMLElement> {
+
+
+// default는 파일당 하나만 사용할 수 있는 키워드이다
+
+  export default abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     templateElement: HTMLTemplateElement;
     hostElement: T;
     element: U;
