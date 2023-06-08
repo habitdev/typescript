@@ -7,11 +7,15 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <title>ProjectManager</title>
   <link rel="stylesheet" href="app.css" />
-  <script src="dist/bundle.js" defer></script>
+  <script type="module" src="dist/app.js" ></script>
+  <!-- 
+    임포트 표현식들을 가진 파일을 임포트하는 스크립트 상에  
+    type="module"을 입력함으로써 브라우저에게 알려야 한다
+  -->
 </head>
 
 <body>
-  <template id="project-input"> 
+  <template id="project-input">
     <!-- template: 즉시 보이지 않거나, 렌더링 되지 않는 html 코드 지정 -->
     <form>
       <div class="form-control">

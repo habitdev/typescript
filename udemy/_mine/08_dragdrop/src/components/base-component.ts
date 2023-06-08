@@ -1,4 +1,4 @@
-namespace App {
+// namespace App {
   // Component Base Class
   // 제너릭 클래스를 이용
   // 직접적인 인스턴스화가 이뤄지지 않도록 추상클래스로 변경
@@ -41,4 +41,4 @@ namespace App {
     abstract configure?(): void; // 선택적 메소드
     abstract renderContent(): void;
   }
-}
+// }
