@@ -1,5 +1,8 @@
 /// <reference path="base-component.ts"/>
 // Component 가져오기
+/// <reference path="../decorators/autobind.ts"/>
+/// <reference path="../models/project.ts"/>
+/// <reference path="../models/drag-drop.ts"/>
 
 namespace App {
   // Project Item Class
