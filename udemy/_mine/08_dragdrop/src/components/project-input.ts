@@ -3,10 +3,10 @@
 /// <reference path="../util/validation.ts"/> //
 /// <reference path="../state/project-state.ts"/> //
 
-import Component from './base-component.js'; // default로 선언된 것만 import
-import * as Validation from '../util/validation.js'; // 그룹화하기
-import { AutoBind as AutoBind } from '../decorators/autobind.js'; // 이름 변경해서 사용하기
-import { projectState } from '../state/project-state.js';
+import Component from './base-component'; // default로 선언된 것만 import
+import * as Validation from '../util/validation'; // 그룹화하기
+import { AutoBind as AutoBind } from '../decorators/autobind'; // 이름 변경해서 사용하기
+import { projectState } from '../state/project-state';
 
 // namespace App {
 // project input Class

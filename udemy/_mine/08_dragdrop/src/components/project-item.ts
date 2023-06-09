@@ -4,11 +4,11 @@
 /// <reference path="../models/project.ts"/> //
 /// <reference path="../models/drag-drop.ts"/> //
 
-import { Draggable } from '../models/drag-drop.js';
+import { Draggable } from '../models/drag-drop';
 // 이미 컴파일된 파일을 자바스크립트가 가져와야 하므로 JS 파일을 import한다
-import { Project } from '../models/project.js';
-import Component from './base-component.js';
-import { AutoBind } from '../decorators/autobind.js';
+import { Project } from '../models/project';
+import Component from './base-component';
+import { AutoBind } from '../decorators/autobind';
 
 
 

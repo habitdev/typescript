@@ -1,7 +1,7 @@
 // Code goes here!
 
-import { ProjectInput } from './components/project-input.js';
-import { ProjectList } from './components/project-list.js';
+import { ProjectInput } from './components/project-input';
+import { ProjectList } from './components/project-list';
 
 /// <reference path="models/drag-drop.ts" /> //
 /// <reference path="models/project.ts" /> //
@@ -25,3 +25,29 @@ new ProjectInput();
 new ProjectList('active');
 new ProjectList('finished');
 // }
+
+
+
+/**
+ * 
+ * 네트워크에서 모든 파일을 한번씩 요청해야 하므로
+ * 이를 하나로 묶는 것이 효율적이다 따라서, 웹팩을 사용한다
+ * => http 요청의 양을 줄이는 것을 도와준다
+ * https://webpack.kr/concepts/
+ */
+// npm install --save-dev webpack webpack-cli webpack-dev-server typescript ts-loader
+
+// ts-loader는 웹팩에게 어떻게 코드를 자바스크립트로 변환할 것인지를 전달한다
+
+// webpack.config.js에 설정을 입력하는데 
+// output의 path는 에러가 나지 않게 하기 위해 tsconfig와 같은 경로여야 한다
+// 경로는 절대경로이다
+
+// path는 nodejs에서 제공하는 require 기능으로 가져온다
+// const path = require('path');
+// path.resolve(__dirname, 'dist')
+
+// 타입스크립트로 뭘 할지 웹팩에게 전달하기 위해선 새로운 entry를 추가해야 한다(module 속성)
+
+
+console.log('Hi!');

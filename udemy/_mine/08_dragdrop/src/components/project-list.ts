@@ -4,12 +4,12 @@
 /// <reference path="../models/project.ts"/> //
 /// <reference path="../models/drag-drop.ts"/> //
 
-import { DragTarget } from '../models/drag-drop.js';
-import Component from './base-component.js';
-import { AutoBind } from '../decorators/autobind.js';
-import { Project, ProjectStatus } from '../models/project.js';
-import { projectState } from '../state/project-state.js';
-import { ProjectItem } from './project-item.js';
+import { DragTarget } from '../models/drag-drop';
+import Component from './base-component';
+import { AutoBind } from '../decorators/autobind';
+import { Project, ProjectStatus } from '../models/project';
+import { projectState } from '../state/project-state';
+import { ProjectItem } from './project-item';
 
 // namespace App {
 // Project List Class

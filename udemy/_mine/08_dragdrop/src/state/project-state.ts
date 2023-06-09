@@ -1,4 +1,4 @@
-import { Project, ProjectStatus } from '../models/project.js';
+import { Project, ProjectStatus } from '../models/project';
 
 // namespace App {
 // 싱글톤 클래스(객체의 인스턴스가 오직 1개만 생성)를 활용함
