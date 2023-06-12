@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TodoList from './components/TodoList';
 import NewTodo from './components/NewTodo';
-import { Todo } from "./todo.model";
+import { Todo } from './todo.model';
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -13,8 +13,14 @@ function App() {
 
   const todoAddHandler = (text: string) => {
     console.log(text);
-    setTodos(prevTodos => [...prevTodos ,{ id: Math.random().toString(), text: text }]);
+    setTodos((prevTodos) => [...prevTodos, { id: Math.random().toString(), text: text }]);
     // 가장 최신의 모습에 배열의 정보를 담는다
+  };
+
+  const todoDeleteHandler = (todoId: string) => {
+    setTodos((prevTodos) => {
+      return prevTodos.filter((todo) => todo.id !== todoId);
+    });
   };
 
   return (
@@ -23,7 +29,7 @@ function App() {
       {/* prop의 이름은 마음대로 정할 수 있다 => items */}
       <NewTodo onAddTodo={todoAddHandler} />
       {/* onAddTodo이란 prop이 todoAddHandler을 전달 */}
-      <TodoList items={todos} />
+      <TodoList items={todos} onDeleteTodo={todoDeleteHandler}/>
     </div>
   );
 }
