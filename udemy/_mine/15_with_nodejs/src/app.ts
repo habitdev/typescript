@@ -12,11 +12,14 @@
 import express, { Request, Response, NextFunction } from 'express'; // typescript 방법
 
 import todoRoutes from './routes/todos';
-import { error } from 'console';
+import { json } from 'body-parser';
+// body-parser는 들어오는 요청들을 전부 파싱하는 미들웨어이다
 
 console.log('Something...');
 
 const app = express(); // express를 실행
+
+app.use(json());
 
 app.use('/todos', todoRoutes);
 // /todos로 시작하는 모든 요청을 todoRoutes로 포워딩한다
