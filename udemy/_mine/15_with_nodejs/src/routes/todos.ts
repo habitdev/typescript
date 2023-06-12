@@ -2,13 +2,12 @@
 // const Router = express.Router
 
 import { Router } from 'express';
-import { createTodo } from '../controllers/todos';
-
+import { createTodo, getTodos, updateTodo, deleteTodo } from '../controllers/todos';
 
 const router = Router();
 router.post('/', createTodo);
-router.get('/');
-router.patch('/:id'); // 업데이트(수정)
-router.delete('/:id'); // 업데이트(삭제)
+router.get('/', getTodos);
+router.patch('/:id', updateTodo); // 업데이트(수정)
+router.delete('/:id', deleteTodo); // 업데이트(삭제)
 
 export default router;
