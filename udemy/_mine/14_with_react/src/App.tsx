@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+// import { Route } from 'react-router-dom';
+
+
 import TodoList from './components/TodoList';
 import NewTodo from './components/NewTodo';
 import { Todo } from './todo.model';
@@ -29,7 +32,7 @@ function App() {
       {/* prop의 이름은 마음대로 정할 수 있다 => items */}
       <NewTodo onAddTodo={todoAddHandler} />
       {/* onAddTodo이란 prop이 todoAddHandler을 전달 */}
-      <TodoList items={todos} onDeleteTodo={todoDeleteHandler}/>
+      <TodoList items={todos} onDeleteTodo={todoDeleteHandler} />
     </div>
   );
 }
