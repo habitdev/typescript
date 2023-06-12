@@ -1,26 +1,14 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import TodoList from './components/TodoList';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const todos = [{ id: 'todo1', text: 'Finish the course!' }];
+
+  return <div className='App'>
+    {/* A component that adds todos */}
+    {/* prop의 이름은 마음대로 정할 수 있다 => items */}
+    <TodoList items={todos}/>
+  </div>;
 }
 
 export default App;
